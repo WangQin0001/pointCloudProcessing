@@ -1,0 +1,197 @@
+<template>
+  <div>
+    <top ref="top"></top>
+    <div id="webgl" ref="div">
+    </div>
+  </div>
+</template>
+
+<script>
+import top from '../views/Top.vue';
+import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import model from './utils/model.js'; // import pcd model
+import {throttle} from 'lodash';
+import { mapMutations,mapState } from 'vuex';
+
+const CAMERA_POSITION = new THREE.Vector3(340, 410, 550);
+const CAMERA_LOOK_AT = new THREE.Vector3(-109, 36, -85);
+
+export default {
+  components: {
+    top
+  },
+  data() {
+    return {
+      scene: null,
+      camera: null,
+      renderer: null,
+      controls: null,
+      mouse: new THREE.Vector2(),
+      raycaster: new THREE.Raycaster(),
+      previousIndex: null,
+      previousColor: new THREE.Color(),
+      clock: new THREE.Clock(),
+      FPS: 120,
+      timeS: 0,
+      topHeight:0,
+    };
+  },
+  created() {
+  },
+
+  computed: {
+    ...mapState(['point1', 'point2']),
+  },
+
+  mounted() {
+    this.setTopHeight();
+    this.initScene();
+    this.initCamera();
+    this.initRenderer();
+    this.initControls();
+    this.initEventListeners();
+
+    this.$refs.div.appendChild(this.renderer.domElement);
+    this.animate();
+  },
+  methods: {
+    ...mapMutations(['setPoint1', 'setPoint2']),
+
+    setTopHeight() {
+      this.$nextTick(() => {
+        const topComponent = this.$refs.top.$el; // Change this line
+        if (topComponent) {
+          this.topHeight = topComponent.offsetHeight;
+        }
+      });
+    },
+
+    initScene() {
+      this.scene = new THREE.Scene();
+      this.scene.add(model);
+
+      const axesHelper = new THREE.AxesHelper(100);
+      axesHelper.position.set(-109, 36, -85);
+      this.scene.add(axesHelper);
+    },
+    initCamera() {
+      this.camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 3000);
+      this.camera.position.copy(CAMERA_POSITION);
+      this.camera.lookAt(CAMERA_LOOK_AT);
+    },
+    initRenderer() {
+      this.renderer = new THREE.WebGLRenderer();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    },
+    initControls() {
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+      this.controls.target.copy(CAMERA_LOOK_AT);
+    },
+    initEventListeners() {
+      window.addEventListener('resize', this.onWindowResize);
+      document.addEventListener('mousemove', throttle(this.onMouseMove, 10));
+      // document.addEventListener('mousedown', this.onMouseDown);
+      document.addEventListener('mouseup', this.onMouseUp);
+    },
+    onWindowResize() {
+      this.renderer.setSize(window.innerWidth,window.innerHeight);
+      this.camera.aspect = window.innerWidth/window.innerHeight;
+      this.camera.updateProjectionMatrix();
+    },
+    onMouseMove(event) {
+      event.stopPropagation();
+      // event.preventDefault();
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      this.mouse.y = -((event.clientY - this.topHeight) / window.innerHeight) * 2 + 1;
+      this.highlightPointUnderMouse(event);
+    },
+    onMouseUp(event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      this.highlightPointUnderMouse(event, true);
+    },
+    highlightPointUnderMouse(event,isMouseDown = false) {
+      // if (event.buttons !== 1) return; // 鼠标未按下左键，不执行任何操作
+      // if (event.type !== 'click') return; // 不是单次点击事件，不执行任何操作
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+      const intersects = this.raycaster.intersectObjects(model.children);
+      if (intersects.length > 0) {
+        const index = intersects[0].index;
+        const pointModel = model.children[0];
+
+        if (this.previousIndex !== null) {
+          this.updatePreviousPoint(pointModel, this.previousIndex, this.previousColor);
+        }
+
+        this.highlightPoint(pointModel, index);
+        pointModel.geometry.attributes.customSize.needsUpdate = true;
+        pointModel.geometry.attributes.customColor.needsUpdate = true;
+        this.previousIndex = index;
+
+        // check if the mouse button was clicked
+        if (isMouseDown) {
+          const point = [
+            pointModel.geometry.attributes.position.array[index * 3].toFixed(2),
+            pointModel.geometry.attributes.position.array[index * 3 + 1].toFixed(2),
+            pointModel.geometry.attributes.position.array[index * 3 + 2].toFixed(2),
+          ];
+          if (this.point1[0] === 0 && this.point1[1] === 0 && this.point1[2] === 0) {
+            // first point
+            this.setPoint1(point);
+            console.log("point1:  "+this.point1)
+          } else {
+            // second point, calculate distance
+            this.setPoint2(point);
+            console.log("point2:  "+this.point2)
+          }
+        }
+
+      }
+    },
+
+    updatePreviousPoint(model, index, color) {
+      model.geometry.attributes.customSize.array[index] = 1;
+      model.geometry.attributes.customColor.array[index * 3] = color.r;
+      model.geometry.attributes.customColor.array[index * 3 + 1] = color.g;
+      model.geometry.attributes.customColor.array[index * 3 + 2] = color.b;
+    },
+    highlightPoint(model, index) {
+      model.geometry.attributes.customSize.array[index] = 8;
+      this.previousColor.setRGB(
+          model.geometry.attributes.customColor.array[index * 3],
+          model.geometry.attributes.customColor.array[index * 3 + 1],
+          model.geometry.attributes.customColor.array[index * 3 + 2]
+      );
+      model.geometry.attributes.customColor.array[index * 3] = 1;
+      model.geometry.attributes.customColor.array[index * 3 + 1] = 0;
+      model.geometry.attributes.customColor.array[index * 3 + 2] = 0;
+    },
+    render() {
+      if (model.children.length > 0) {
+        this.renderer.render(this.scene, this.camera);
+      }
+    },
+    animate() {
+      requestAnimationFrame(this.animate);
+
+      this.controls.update();
+      const T = this.clock.getDelta();
+      this.timeS += T;
+
+      if (this.timeS > 1 / this.FPS) {
+        this.render();
+        this.timeS = 0;
+      }
+    },
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onWindowResize);
+    document.removeEventListener('mousemove', this.onMouseMove);
+  }
+};
+</script>
+
+<style scoped>
+</style>
