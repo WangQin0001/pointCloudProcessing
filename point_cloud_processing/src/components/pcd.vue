@@ -1,13 +1,15 @@
 <template>
-  <div>
-    <top ref="top"></top>
-    <div id="webgl" ref="div">
-    </div>
+  <div class="container">
+    <top ref="top" class="top"></top>
+    <div id="webgl" class="canvas" ref="div"></div>
+    <controller class="controller"></controller>
   </div>
+
 </template>
 
 <script>
 import top from '../views/Top.vue';
+import controller from "@/components/controller.vue";
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import model from './utils/model.js'; // import pcd model
@@ -19,7 +21,8 @@ const CAMERA_LOOK_AT = new THREE.Vector3(-109, 36, -85);
 
 export default {
   components: {
-    top
+    top,
+    controller
   },
   data() {
     return {
@@ -194,4 +197,20 @@ export default {
 </script>
 
 <style scoped>
+
+.container {
+  position: relative;
+}
+
+.canvas {
+  position: absolute;
+  top: 63px;
+  left: 0;
+}
+
+.controller {
+  position: absolute;
+  top: 120px;
+  right: 20px;
+}
 </style>

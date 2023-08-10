@@ -1,6 +1,7 @@
 <template>
   <div class="login" clearfix>
     <top></top>
+    <controller></controller>
     <div class="login-wrap">
       <el-row type="flex" justify="center">
         <el-form ref="loginFormRef" :model="user" :rules="rules" status-icon label-width="80px" @submit.prevent>
@@ -26,10 +27,14 @@
 <script>
 import {login} from '../network/loginAndRegister.js'
 import top from './Top.vue'
+
+import controller from "@/components/controller.vue";
+
 export default {
   name: "login",
   components:{
-    top
+    top,
+    controller
   },
   data() {
     return {
