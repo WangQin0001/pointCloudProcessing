@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 #4.导入并注册蓝图
 from blueprints.pcd import bp as pcd_bp
 from blueprints.auth import bp as auth_bp
-
+from blueprints.controller import bp as controller_bp
 
 app = Flask(__name__)
 #1.绑定配置文件
@@ -21,7 +21,7 @@ migrate = Migrate(app,db)
 #4.注册蓝图
 app.register_blueprint(pcd_bp)
 app.register_blueprint(auth_bp)
-
+app.register_blueprint(controller_bp)
 
 if __name__ == '__main__':
     app.run()

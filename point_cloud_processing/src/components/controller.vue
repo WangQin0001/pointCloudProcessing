@@ -1,33 +1,68 @@
-<template>
-<div>
+<template xmlns="http://www.w3.org/1999/html">
   <div>
-    <el-button type="primary" icon="el-icon-arrow-left" @click="turnRight">Turn Left</el-button>
-    <el-button type="primary" @click="turnLeft">Turn Right<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+    <div>
+      <el-link type="primary" @click="offsetPosition">Goto offset position</el-link>
+      <br>
+      <el-link type="primary" @click='captureCurrentImage'>Capture images in current position</el-link>
+      <br>
+      <el-link type="primary" @click="captureSurroundingImage">Capture images of the surrounding scenes</el-link>
+      <br>
+      <el-link type="primary" @click="manualRotate">Manual rotate</el-link>
+      <br>
+      <el-link type="primary"></el-link>
+    </div>
   </div>
-</div>
 </template>
 
 
 <script>
 
-export default {
-  components:{},
-  data(){
-    return{
+import {offsetPosition,captureCurrentImage,captureSurroundingImage,manualRotate} from "@/network/controller";
 
-    }
+export default {
+  components: {},
+  data() {
+    return {}
   },
-  methods:{
-    turnRight(){
-      console.log("turn right")
+  methods: {
+    offsetPosition() {
+      offsetPosition().then(res => {
+        this.$message.success("Offset Position sucess!")
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
     },
-    turnLeft(){
-      console.log("turn left")
-    }
+
+    captureCurrentImage() {
+      captureCurrentImage().then(res=>{
+        this.$message.success("captureCurrentImage sucess!")
+        console.log(res)
+      }).catch(error=>{
+        console.log(error)
+      })
+    },
+
+    captureSurroundingImage() {
+      captureSurroundingImage().then(res=>{
+        this.$message.success("captureSurroundingImage sucess!")
+        console.log(res)
+      }).catch(error=>{
+        console.log(error)
+      })
+    },
+
+    manualRotate() {
+      manualRotate().then(res=>{
+        this.$message.success("ManualRotate sucess!")
+        console.log(res)
+      }).catch(error=>{
+        console.log(error)
+      })
+    },
   }
 }
 </script>
-
 
 
 <style scoped>
