@@ -1,5 +1,5 @@
 // this page define main logic of render
-let width,height
+//没用的上个版本文件
 
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -12,40 +12,26 @@ const scene = new THREE.Scene();
 scene.add(model);
 
 //auxiliary observation coordinates
-const axesHelper = new THREE.AxesHelper(100);
-axesHelper.position.set(-109, 36, -85);
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper(10);
+// scene.add(axesHelper);
 
-// 改为获取div的宽高
-// const div = document.getElementById("webgl");
-// const width = div.offsetWidth;
-// const height = div.offsetHeight;
-// console.log("宽度：" + width + "，高度：" + height);
-
-function getDivSize(divWidth,divHeight){
-  console.log("div size:"+divWidth,divHeight)
-  width = divWidth
-  height = divHeight
-}
-
-
-// get current width and heighe of brower window
-// const width = window.innerWidth;
-// const height = window.innerHeight;
+//get current width and heighe of brower window
+const width = window.innerWidth;
+const height = window.innerHeight;
 
 // create a perspectiveCamera
 const camera = new THREE.PerspectiveCamera(30, width / height, 1, 3000);
 // Set camera position according to the magnitude of rendering size
 camera.position.set(340, 410, 550);
-camera.lookAt(-109, 36, -85);
+camera.lookAt(0, 0, 0);
 
 // create a renderen
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(width, height);
 
 // create a control
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(-109, 36, -85);//设置控制器中心位置
+controls.target.set(0, 0, 0);
 
 // set canvas size changes with window
 window.onresize = function () {
@@ -60,21 +46,20 @@ document.addEventListener('mousemove', onMouseMove, false);
 //throttling time to improve rendering efficiency
 let throttleTimeout = null;
 function onMouseMove(event) {
-  event.stopPropagation()
   if (!throttleTimeout) {
     throttleTimeout = setTimeout(() => {
       event.preventDefault();
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       throttleTimeout = null;
-    }, 10); //no recalculation within 10ms 
+    }, 10); //no recalculation within 10ms
   }
 }
 
 // raycaster to obtain objects down current mouse, https://threejs.org/docs/#api/en/core/Raycaster
 const raycaster = new THREE.Raycaster();
 // precision of raycaster
-raycaster.params.Points.threshold = 0.8;
+raycaster.params.Points.threshold = 1.0;
 let previousIndex = null;
 const previousColor = new THREE.Color();
 
@@ -90,9 +75,9 @@ function updatePreviousPoint(model, index, color) {
 function highlightPoint(model, index) {
   model.geometry.attributes.customSize.array[index] = 8;
   previousColor.setRGB(
-    model.geometry.attributes.customColor.array[index * 3],
-    model.geometry.attributes.customColor.array[index * 3 + 1],
-    model.geometry.attributes.customColor.array[index * 3 + 2]
+      model.geometry.attributes.customColor.array[index * 3],
+      model.geometry.attributes.customColor.array[index * 3 + 1],
+      model.geometry.attributes.customColor.array[index * 3 + 2]
   );
   model.geometry.attributes.customColor.array[index * 3] = 1;
   model.geometry.attributes.customColor.array[index * 3 + 1] = 0;
@@ -102,17 +87,18 @@ function highlightPoint(model, index) {
 // Handle the click event
 function createOnClickHandler(intersects) {
   return function () {
-    // Message({
-    //   message:
-    //     'DistanceToCamera : ' + intersects[0].distance.toFixed(2) +
-    //     '<br/>' +
-    //     'Position.X :' + intersects[0].point.x.toFixed(2) +
-    //     '<br/>' +
-    //     'Position.Y :' + intersects[0].point.y.toFixed(2) +
-    //     '<br/>' +
-    //     'Position.Z :' + intersects[0].point.z.toFixed(2),
-    //   dangerouslyUseHTMLString: true
-    // });
+    // alert the information of current point when click on it
+    Message({
+      message:
+          'DistanceToCamera : ' + intersects[0].distance.toFixed(2) +
+          '<br/>' +
+          'Position.X :' + intersects[0].point.x.toFixed(2) +
+          '<br/>' +
+          'Position.Y :' + intersects[0].point.y.toFixed(2) +
+          '<br/>' +
+          'Position.Z :' + intersects[0].point.z.toFixed(2),
+      dangerouslyUseHTMLString: true
+    });
   };
 }
 
@@ -134,7 +120,7 @@ function render() {
       pointModel.geometry.attributes.customSize.needsUpdate = true;
       pointModel.geometry.attributes.customColor.needsUpdate = true;
       previousIndex = index;
-      document.removeEventListener('click', currentOnClickHandler);//remove previous click event before new click event 
+      document.removeEventListener('click', currentOnClickHandler);//remove previous click event before new click event
       currentOnClickHandler = createOnClickHandler(intersects, pointModel);//handel click event
       document.addEventListener('click', currentOnClickHandler);
     }
@@ -165,4 +151,4 @@ function animate() {
 
 animate()
 
-export { renderer ,getDivSize};
+export { renderer };

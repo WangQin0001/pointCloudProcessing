@@ -5,7 +5,7 @@
   <div class="login clearfix">
     <div class="login-wrap">
       <el-row type="flex" justify="center">
-        <el-form ref="registerFormRef" :model="user" :rules="rules" status-icon label-width="80px" @submit.prevent>
+        <el-form ref="registerFormRef" :model="user" :rules="rules" status-icon label-width="80px" @submit.prevent @keyup.enter.native="doRegister">
           <h3>Register Page</h3>
           <hr>
           <el-form-item prop="username" label="username">
@@ -57,6 +57,11 @@ export default {
                 password: "",
                 rePassword:"",
                 catpcha:""
+              // username: "wangqin",
+              // email: "wangqinstu@outlook.com",
+              // password: "wq111111",
+              // rePassword:"wq111111",
+              // catpcha:""
             },
             rules:{
               username: [{
@@ -144,7 +149,7 @@ export default {
 
         getCatpcha(this.user.email).then(res => {
           console.log(res);
-          if (res.data.code === 200) {
+          if (res.code === 200) {
             this.$message.success('catpcha sent success!');
           }
         }).catch(error => {
@@ -160,12 +165,14 @@ export default {
               this.$message.error("input is invalid, please check!")
             } else {
                     register(this.user.username,this.user.email,this.user.catpcha,this.user.password,this.user.rePassword).then(res => {
-                        if (res.data.code === 200) {
+                      console.log(res)
+                      if (res.code === 200) {
+                            console.log(res)
                             this.$message.success("register succeed！")
-                            this.$router.push('/login')
+                            this.$router.push('/user/login')
                             this.innerVisible = false
                         } else {
-                            this.$message.error(res.data.msg)
+                            this.$message.success(res.data)
                         }
                     }).catch(error => {
                         this.$message.error('register failed！');

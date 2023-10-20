@@ -24,4 +24,5 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(controller_bp)
 
 if __name__ == '__main__':
-    app.run()
+    app.logger.debug('This is a debug message')
+    app.run(debug=True,use_reloder=True)

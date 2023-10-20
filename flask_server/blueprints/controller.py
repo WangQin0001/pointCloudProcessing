@@ -1,5 +1,6 @@
 from flask import Blueprint,request,jsonify,session
-bp = Blueprint("controller",__name__,url_prefix="/api")
+bp = Blueprint("controller",__name__,url_prefix="/controller")
+# bp = Blueprint("api",__name__,url_prefix="/api")
 
 from .API_controll import SSH_local
 
@@ -22,12 +23,15 @@ SSH.compile("stereoPi_new.cpp source/lidarlite_v3.cpp source/GPIO.cpp source/UAR
 offset = SSH.read_angle()
 print("Offset angle: "+str(offset*360/1024))
 
-@bp.route('/offsetPosition')
+@bp.route('/offsetPosition',methods=['GET'])
 def offsetPosition():
     # session.clear()
     # SSH.go_to_offset_angle(offset)
     print("offsetPosition")
     return jsonify({"code": 200, "message": "offsetPosition success", "data": None})
+
+
+
 
 
 @bp.route('/captureCurrentImage')

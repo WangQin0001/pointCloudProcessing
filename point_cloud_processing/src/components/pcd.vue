@@ -16,8 +16,14 @@ import model from './utils/model.js'; // import pcd model
 import {throttle} from 'lodash';
 import { mapMutations,mapState } from 'vuex';
 
-const CAMERA_POSITION = new THREE.Vector3(340, 410, 550);
-const CAMERA_LOOK_AT = new THREE.Vector3(-109, 36, -85);
+// const CAMERA_POSITION = new THREE.Vector3(340, 410, 550);
+const CAMERA_POSITION = new THREE.Vector3(10, 10, 10);
+
+// const CAMERA_LOOK_AT = new THREE.Vector3(-109, 36, -85);
+const CAMERA_LOOK_AT = new THREE.Vector3(0,0,0);
+
+const THRESHOLD = 0.01//精度
+
 
 export default {
   components: {
@@ -40,26 +46,64 @@ export default {
       topHeight:0,
     };
   },
-  created() {
-  },
 
   computed: {
-    ...mapState(['point1', 'point2']),
+    ...mapState(['point1', 'point2','isAuthenticated']),
+  },
+
+  watch: {
+    isAuthenticated(loggedIn) {
+      if (loggedIn) {
+        this.initPointCloud();
+      } else {
+        this.clearPointCloud();
+      }
+    },
   },
 
   mounted() {
-    this.setTopHeight();
-    this.initScene();
-    this.initCamera();
-    this.initRenderer();
-    this.initControls();
-    this.initEventListeners();
+    if (this.$store.state.isAuthenticated) {
+      // 用户已登录，初始化点云数据
+      this.initPointCloud();
+    }
 
-    this.$refs.div.appendChild(this.renderer.domElement);
-    this.animate();
   },
   methods: {
     ...mapMutations(['setPoint1', 'setPoint2']),
+
+    initPointCloud(){
+      this.setTopHeight();
+      this.initScene();
+      this.initCamera();
+      this.initRenderer();
+      this.initControls();
+      this.initEventListeners();
+
+      this.$refs.div.appendChild(this.renderer.domElement);
+      this.animate();
+    },
+
+    // 清除点云数据的代码
+    clearPointCloud() {
+      if (this.scene && model) {
+        // 假设 model 是点云数据
+        this.scene.remove(model);
+
+        // 如果 model 有 geometry 和 material 属性，你可能需要手动释放这些资源
+        if (model.geometry) {
+          model.geometry.dispose(); // 释放几何体资源
+        }
+        if (model.material) {
+          if (model.material.map) {
+            model.material.map.dispose(); // 如果有纹理图，释放纹理资源
+          }
+          model.material.dispose(); // 释放材质资源
+        }
+        this.$store.commit('setPoint1', new Float32Array(3));
+        this.$store.commit('setPoint2', new Float32Array(3));
+      }
+    },
+
 
     setTopHeight() {
       this.$nextTick(() => {
@@ -74,8 +118,10 @@ export default {
       this.scene = new THREE.Scene();
       this.scene.add(model);
 
-      const axesHelper = new THREE.AxesHelper(100);
-      axesHelper.position.set(-109, 36, -85);
+      const axesHelper = new THREE.AxesHelper(4);
+      // axesHelper.position.set(-109, 36, -85);
+      axesHelper.position.set(0,0,0);
+
       this.scene.add(axesHelper);
     },
     initCamera() {
@@ -118,6 +164,9 @@ export default {
     highlightPointUnderMouse(event,isMouseDown = false) {
       // if (event.buttons !== 1) return; // 鼠标未按下左键，不执行任何操作
       // if (event.type !== 'click') return; // 不是单次点击事件，不执行任何操作
+      this.raycaster.params.Points.threshold = THRESHOLD;
+
+
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(model.children);
       if (intersects.length > 0) {
@@ -192,7 +241,8 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.onWindowResize);
     document.removeEventListener('mousemove', this.onMouseMove);
-  }
+  },
+
 };
 </script>
 

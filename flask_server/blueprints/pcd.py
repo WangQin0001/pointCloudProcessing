@@ -26,7 +26,7 @@ def pick_points(cloud):
     vis.destroy_window()
     return vis.get_picked_points()
 
-
+# 移除太远的点
 def removeFarPoints(pcd):
     # 均值和标准差
     point_mean = np.mean(pcd.points, axis=0)
@@ -83,9 +83,11 @@ def downSamplePoints(pcd):
     display_point_cloud(pcd_downSample)
     return pcd_downSample
 
+
+
 @bp.route("/home",methods=['GET'])
 def home():
-    pcd = o3d.io.read_point_cloud("F:/OneDrive/100_work/python/.venv/resources/all.pcd")
+    pcd = o3d.io.read_point_cloud("F:/OneDrive/100_work/repo/point_cloud_processing/point_cloud_processing/public/static/models/pcd/new.pcd")
     print("The orgin points number：{}".format(np.asarray(pcd.points).shape[0]))
 
     # 点云去噪

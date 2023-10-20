@@ -41,6 +41,7 @@ def login():
 @bp.route('/logout')
 def logout():
     session.clear()
+    # logger.debug('This is logout')
     return jsonify({"code": 200, "message": "logout success", "data": None})
 
 @bp.route('/getUsername')
@@ -53,7 +54,6 @@ def getUsername():
         return jsonify({"code": 200, "message": "got username success", "data": username})
     else:
         return jsonify({"code": 200, "message": "got username failed", "data": None})
-
 
 
 @bp.route('/register', methods=['POST'])

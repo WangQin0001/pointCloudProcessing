@@ -26,6 +26,7 @@
 <script>
 import {logout,getUsername} from '../network/loginAndRegister'
 import { mapMutations,mapState } from 'vuex';
+import store from '../store';
 
 export default {
   data() {
@@ -44,22 +45,6 @@ export default {
     },
     ...mapState(['point1', 'point2']),
 
-    // distanceText: {
-    //
-    //   get() {
-    //     if (this.distance === null || this.distance === 0) {
-    //       return 'Get Distance';
-    //     }
-    //     else {
-    //       // reset points
-    //
-    //       return `Distance: ${this.distance}`;
-    //     }
-    //   },
-    //   set(newValue) {
-    //     // Do nothing, we only need the getter to return a value
-    //   },
-    // },
   },
   watch: {
     point1: {
@@ -99,17 +84,24 @@ export default {
 
       console.log('Distance:', distance);
     },
+
     logout(){
       logout().then(res=>{
-        this.$message.success("logout success!")
-        this.$router.push('/login')
+        this.$message.success("logout success!");
+        store.commit('setIsAuthenticated',false);
+        localStorage.setItem('isAuthenticated', false);
+        store.commit('setPoint1', new Float32Array(3));
+        store.commit('setPoint2', new Float32Array(3));
+        this.$router.push('/user/login')
       }).catch(error=>{
         console.log(error)
       })
     },
+
     getUsername(){
       getUsername().then(res=>{
-        this.username = res.data.data
+        this.username = res.data
+        console.log("用户名"+res)
       }).catch(error=>{
         console.log(error)
       })

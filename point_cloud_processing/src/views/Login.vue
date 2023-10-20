@@ -1,10 +1,9 @@
 <template>
   <div class="login" clearfix>
     <top></top>
-    <controller></controller>
     <div class="login-wrap">
       <el-row type="flex" justify="center">
-        <el-form ref="loginFormRef" :model="user" :rules="rules" status-icon label-width="80px" @submit.prevent>
+        <el-form ref="loginFormRef" :model="user" :rules="rules" status-icon label-width="80px" @submit.prevent @keyup.enter.native="doLogin">
           <h3>Login Page</h3>
           <hr>
           <el-form-item prop="email" label="email">
@@ -15,8 +14,8 @@
           </el-form-item>
           <br>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-upload" @click="doLogin" @keyup.enter="doLogin">Login</el-button>
-            <router-link to="/register" style="margin-left: 50px;">Register</router-link>
+            <el-button type="primary" icon="el-icon-upload" @click="doLogin">Login</el-button>
+            <router-link to="/user/register" style="margin-left: 50px;">Register</router-link>
           </el-form-item>
         </el-form>
       </el-row>
@@ -27,18 +26,18 @@
 <script>
 import {login} from '../network/loginAndRegister.js'
 import top from './Top.vue'
-
-import controller from "@/components/controller.vue";
+import store from '../store'
 
 export default {
   name: "login",
   components:{
     top,
-    controller
   },
   data() {
     return {
       user: {
+        // email: "wangqinstu@outlook.com",
+        // password: "wq111111"
         email: "",
         password: ""
       },
@@ -80,15 +79,14 @@ export default {
         } else {
           login(this.user.email, this.user.password).then(res => {
             this.$message.success("login sucess!")
+            store.commit('setIsAuthenticated',true)
+
             this.$router.push('/home')
             console.log(res)
           }).catch(error => {
             console.log(error)
           })
         }
-      })
-      this.$nextTick(() => {
-        this.$refs.button.focus()
       })
     }
   }

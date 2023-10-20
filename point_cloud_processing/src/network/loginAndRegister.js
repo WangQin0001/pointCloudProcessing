@@ -2,47 +2,47 @@ import { request } from './request.js'
 
 export function getCatpcha(email) {
 	return request({
-		url: '/getCatpcha',
-		method: 'get',
-		params:{
+		url: '/user/getCatpcha',
+		method: 'post',
+		data:{    // 使用 'data' 而不是 'params'，这是发送POST请求的请求体
 			email:email
 		}
 	})
 }
-export function register(username, email, captcha, password, repassword) {
-	const formData = new FormData()
-	formData.append('username', username)
-	formData.append('email', email)
-	formData.append('captcha', captcha)
-	formData.append('password', password)
-	formData.append('password_confirm', repassword)
 
+export function register(username, email, captcha, password, repassword) {
 	return request({
-		url: '/register',
+		url: '/user/register',
 		method: 'post',
-		data: formData
+		data: {
+			username:username,
+			email:email,
+			captcha:captcha,
+			password:password,
+			repassword:repassword
+		}
 	})
 }
 
 export function login(email, password) {
-	const formData = new FormData()
-	formData.append('email', email)
-	formData.append('password', password)
 	return request({
-		url: '/login',
+		url: '/user/login',
 		method: 'post',
-		data: formData
+		data: {
+			email:email,
+			password:password
+		}
 	})
 }
 
 export function logout(){
 	return request({
-		url:'/logout'
+		url:'/user/logout'
 	})
 }
 
 export function getUsername(){
 	return request({
-		url:'/getUsername'
+		url:'/user/getUsername'
 	})
 }

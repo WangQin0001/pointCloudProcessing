@@ -16,14 +16,14 @@ const pointCloudMaterial = new THREE.ShaderMaterial({
 
 // load pointcloud data from "path"
 let pointCloud;
-loader.load("static/models/pcd/output.pcd", function (loadedPointCloud) {
+loader.load("static/models/pcd/newOutput.pcd", function (loadedPointCloud) {
   const geometry = loadedPointCloud.geometry;
   // get the size and color of loaded point cloud
   const customSize = new Float32Array(geometry.attributes.position.count);
   const customColor = new Float32Array(geometry.attributes.color.array);
   // set all points size = 1
   for (let i = 0; i < geometry.attributes.position.count; i++) {
-    customSize[i] = 1;
+    customSize[i] = 2;
   }
   geometry.setAttribute('customSize', new THREE.BufferAttribute(customSize, 1));
   geometry.setAttribute('customColor', new THREE.BufferAttribute(customColor, 3));
