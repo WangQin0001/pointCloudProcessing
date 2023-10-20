@@ -2,28 +2,46 @@ import { request } from './request.js'
 
 export function offsetPosition() {
     return request({
-        url: '/controlRaspberryPi/go_to_offset_angle',
-        method: 'get',
+        url: '/controlRaspberryPi',
+        method: 'post',
+        data:{
+            methodName:1,
+        }
     })
 }
 
 export function captureCurrentImage() {
     return request({
-        url: '/controlRaspberryPi/capture_single_image',
-        method: 'get',
+        url: '/controlRaspberryPi',
+        method: 'post',
+        data:{
+            methodName:2,
+        }
     })
 }
 
-export function captureSurroundingImage() {
+export function captureSurroundingImage(methodName,step,dir,angle) {
     return request({
-        url: '/controlRaspberryPi/capture_image_full',
-        method: 'get',
+        url: '/controlRaspberryPi',
+        method: 'post',
+        data:{
+            methodName:methodName,
+            step:step,
+            dir:dir,
+            angle:angle,
+        }
     })
 }
 
-export function manualRotate() {
+export function manualRotate(methodName,step,dir,angle) {
     return request({
-        url: '/controlRaspberryPi/rotate_platform',
-        method: 'get',
+        url: '/controlRaspberryPi',
+        method: 'post',
+        data:{
+            methodName:methodName,
+            step:step,
+            dir:dir,
+            angle:angle,
+        }
     })
 }
