@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store'
 
+
+// import Home from '../views/Home.vue'
 // 懒加载组件
 const Login = () => import('@/views/Login.vue');
 const Home = () => import('@/views/Home.vue');

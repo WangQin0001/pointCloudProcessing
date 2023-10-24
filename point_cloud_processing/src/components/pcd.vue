@@ -12,7 +12,7 @@ import top from '../views/Top.vue';
 import controller from "@/components/controller.vue";
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import model from './utils/model.js'; // import pcd model
+import loadModel  from './utils/model.js'; // import pcd model
 import {throttle} from 'lodash';
 import { mapMutations,mapState } from 'vuex';
 
@@ -32,6 +32,7 @@ export default {
   },
   data() {
     return {
+      model: null,
       scene: null,
       camera: null,
       renderer: null,
@@ -51,6 +52,9 @@ export default {
     ...mapState(['point1', 'point2','isAuthenticated']),
   },
 
+  beforeDestroy() {
+    this.removeEventListeners();
+  },
   watch: {
     isAuthenticated(loggedIn) {
       if (loggedIn) {
@@ -79,31 +83,31 @@ export default {
       this.initControls();
       this.initEventListeners();
 
-      this.$refs.div.appendChild(this.renderer.domElement);
-      this.animate();
+      // 使用 loadModel 函数加载模型
+      loadModel((loadedModel) => {
+        this.model = loadedModel; // 将加载的模型存储在组件的数据属性中
+        this.scene.add(this.model); // 添加模型到场景
+        this.$refs.div.appendChild(this.renderer.domElement);
+        this.animate(); // 开始渲染循环
+      });
     },
 
     // 清除点云数据的代码
     clearPointCloud() {
-      if (this.scene && model) {
-        // 假设 model 是点云数据
-        this.scene.remove(model);
-
-        // 如果 model 有 geometry 和 material 属性，你可能需要手动释放这些资源
-        if (model.geometry) {
-          model.geometry.dispose(); // 释放几何体资源
-        }
-        if (model.material) {
-          if (model.material.map) {
-            model.material.map.dispose(); // 如果有纹理图，释放纹理资源
-          }
-          model.material.dispose(); // 释放材质资源
+      if (this.scene) {
+        // 清除场景中的所有子项
+        while(this.scene.children.length > 0){
+          this.scene.remove(this.scene.children[0]);
         }
         this.$store.commit('setPoint1', new Float32Array(3));
         this.$store.commit('setPoint2', new Float32Array(3));
       }
     },
 
+    removeEventListeners() {
+      document.removeEventListener('mousemove', this.onMouseMove);
+      document.removeEventListener('mouseup', this.onMouseUp);
+    },
 
     setTopHeight() {
       this.$nextTick(() => {
@@ -116,7 +120,6 @@ export default {
 
     initScene() {
       this.scene = new THREE.Scene();
-      this.scene.add(model);
 
       const axesHelper = new THREE.AxesHelper(4);
       // axesHelper.position.set(-109, 36, -85);
@@ -168,10 +171,10 @@ export default {
 
 
       this.raycaster.setFromCamera(this.mouse, this.camera);
-      const intersects = this.raycaster.intersectObjects(model.children);
+      const intersects = this.raycaster.intersectObjects(this.model.children);
       if (intersects.length > 0) {
         const index = intersects[0].index;
-        const pointModel = model.children[0];
+        const pointModel = this.model.children[0];
 
         if (this.previousIndex !== null) {
           this.updatePreviousPoint(pointModel, this.previousIndex, this.previousColor);
@@ -221,7 +224,7 @@ export default {
       model.geometry.attributes.customColor.array[index * 3 + 2] = 0;
     },
     render() {
-      if (model.children.length > 0) {
+      if (this.model && this.model.children.length > 0) {
         this.renderer.render(this.scene, this.camera);
       }
     },
@@ -238,10 +241,7 @@ export default {
       }
     },
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onWindowResize);
-    document.removeEventListener('mousemove', this.onMouseMove);
-  },
+
 
 };
 </script>

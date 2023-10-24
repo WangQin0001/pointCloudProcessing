@@ -89,7 +89,7 @@ export default {
       logout().then(res=>{
         this.$message.success("logout success!");
         store.commit('setIsAuthenticated',false);
-        localStorage.setItem('isAuthenticated', false);
+        sessionStorage.setItem('isAuthenticated', false);
         store.commit('setPoint1', new Float32Array(3));
         store.commit('setPoint2', new Float32Array(3));
         this.$router.push('/user/login')

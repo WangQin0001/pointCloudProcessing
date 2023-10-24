@@ -78,11 +78,15 @@ export default {
           this.$message.error("Input is invalid, please check!")
         } else {
           login(this.user.email, this.user.password).then(res => {
-            this.$message.success("login sucess!")
-            store.commit('setIsAuthenticated',true)
+            if(res.code==200){
+              this.$message.success("login sucess!")
+              store.commit('setIsAuthenticated',true)
 
-            this.$router.push('/home')
-            console.log(res)
+              this.$router.push('/home')
+              console.log(res)
+            }else{
+              this.$message.info(res.data)
+            }
           }).catch(error => {
             console.log(error)
           })
