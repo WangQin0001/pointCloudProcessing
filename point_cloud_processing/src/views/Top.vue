@@ -93,7 +93,7 @@ export default {
         store.commit('setPoint1', new Float32Array(3));
         store.commit('setPoint2', new Float32Array(3));
         this.$router.push('/user/login')
-      }).catch(error=>{
+      }).catch(error=>{n
         console.log(error)
       })
     },

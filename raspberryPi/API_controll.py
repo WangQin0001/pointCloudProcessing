@@ -3,6 +3,7 @@ import math
 from datetime import datetime
 import zipfile
 import os
+import json
 
 
 class SSH_local:
@@ -34,11 +35,11 @@ class SSH_local:
             offset = int(out[i + 1:-1])
         except:
             print("Error: ", out)
-        # print("Offset angle: "+str(offset))
+        print("Offset angle in api_controll: "+str(offset))
         return offset
 
     def go_to_offset_angle(self, offset):
-        print("saved_offset_angle:1111111111: "+str(offset))
+        print("go_to_offset_angle in api controll: "+str(offset))
         loop = 1
         while (loop):
             angle = self.read_angle()
