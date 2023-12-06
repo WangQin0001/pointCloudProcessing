@@ -119,16 +119,12 @@ export default {
                 {
                   min: 4,
                   max: 4,
-                  message: 'catpcha have 4 characters',
+                  message: 'catpcha has 4 characters',
                   trigger: 'blur'
                 },
               ],
             }
         };
-    },
-    created() {
-        // console.log($);
-        // console.log("1111");
     },
     methods: {
       getCatpcha() {
@@ -157,7 +153,6 @@ export default {
           this.$message.error('get catpcha failed');
         });
       },
-
 
         doRegister() {
           this.$refs.registerFormRef.validate(valid => {

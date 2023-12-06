@@ -202,7 +202,6 @@ export default {
             console.log("point2:  "+this.point2)
           }
         }
-
       }
     },
 

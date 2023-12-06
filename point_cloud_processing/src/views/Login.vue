@@ -81,9 +81,7 @@ export default {
             if(res.code==200){
               this.$message.success("login sucess!")
               store.commit('setIsAuthenticated',true)
-
               this.$router.push('/home')
-              console.log(res)
             }else{
               this.$message.info(res.data)
             }

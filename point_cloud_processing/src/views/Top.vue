@@ -67,7 +67,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setPoint1', 'setPoint2']),
-
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -81,8 +80,6 @@ export default {
       // reset points
       this.setPoint1(new Float32Array(3));
       this.setPoint2(new Float32Array(3));
-
-      console.log('Distance:', distance);
     },
 
     logout(){
@@ -93,7 +90,7 @@ export default {
         store.commit('setPoint1', new Float32Array(3));
         store.commit('setPoint2', new Float32Array(3));
         this.$router.push('/user/login')
-      }).catch(error=>{n
+      }).catch(error=>{
         console.log(error)
       })
     },
@@ -105,7 +102,6 @@ export default {
       }).catch(error=>{
         console.log(error)
       })
-
     }
   }
 }
