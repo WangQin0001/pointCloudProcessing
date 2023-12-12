@@ -52,7 +52,8 @@ def match_image(args):
     images_path = sorted(glob.glob(args.input_directory+'/'+args.folder+"/*/l.jpg", recursive=True))
     
     angle_list =[]
-    for path_elem in images_path:    
+    for path_elem in images_path:
+        print("正在从以下路径读取图片：",path_elem)
         angle = path_elem.split('\\')[-2]
         if not angle.isnumeric():
             angle = path_elem.split('/')[-2]
@@ -61,6 +62,13 @@ def match_image(args):
 
     image_list = []
     for i in angle_list:
+        image_path = args.input_directory + "/" + args.folder + '/' + str(i) + "/l.jpg"
+        image = cv2.imread(image_path)
+        if image is None:
+            print("Failed to load image:", image_path)
+        else:
+            print("Loaded image:", image_path)
+
         image = cv2.imread(args.input_directory+"/"+args.folder+'/'+str(i)+"/l.jpg")
         image = cv2.resize(image,(512,384),interpolation = cv2.INTER_AREA)
         image_list.append(image)
@@ -84,5 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('-i','--input_directory', help="directory to input images", default="input")
     parser.add_argument('-f','--folder', help="folder of input images", default="09112023-1407")
     parser.add_argument('-o','--output_directory', help="directory to input images", default="output/panorama")
+
     args = parser.parse_args()
+    print("Received arguments:", args)
     match_image(args)
