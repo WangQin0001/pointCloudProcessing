@@ -82,7 +82,7 @@ def match_image(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i','--input_directory', help="directory to input images", default="input")
-    parser.add_argument('-f','--folder', help="folder of input images", default="27072023-1628")
+    parser.add_argument('-f','--folder', help="folder of input images", default="09112023-1407")
     parser.add_argument('-o','--output_directory', help="directory to input images", default="output/panorama")
     args = parser.parse_args()
-    match_image(args) 
+    match_image(args)

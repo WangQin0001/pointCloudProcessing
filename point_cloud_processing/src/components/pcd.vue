@@ -2,14 +2,15 @@
   <div class="container">
     <top ref="top" class="top"></top>
     <div id="webgl" class="canvas" ref="div"></div>
-    <controller class="controller"></controller>
+    <piController class="piController"></piController>
+    <dpController class="dpController"></dpController>
   </div>
-
 </template>
 
 <script>
 import top from '../views/Top.vue';
-import controller from "@/components/controller.vue";
+import piController from "@/components/piController.vue";
+import dpController from "@/components/dpController.vue";
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import loadModel  from './utils/model.js'; // import pcd model
@@ -28,7 +29,8 @@ const THRESHOLD = 0.01//精度
 export default {
   components: {
     top,
-    controller
+    piController,
+    dpController
   },
   data() {
     return {
@@ -257,9 +259,11 @@ export default {
   left: 0;
 }
 
-.controller {
+.piController {
   position: absolute;
   top: 120px;
   right: 20px;
 }
+
+
 </style>
