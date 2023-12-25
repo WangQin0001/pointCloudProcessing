@@ -89,7 +89,7 @@ def solve_paras(args):
         ax.set_title(str(index)+' panorama',fontsize=10)
         
         fig.tight_layout()
-        plt.show()
+        # plt.show()
 
         # Save
         np.save("{0}/{1}/{3}/calib_param/{1}-depth-{2}-{3}.npy".format

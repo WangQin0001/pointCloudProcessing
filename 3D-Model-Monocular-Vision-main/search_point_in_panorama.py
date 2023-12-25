@@ -115,7 +115,7 @@ def search_point(args):
         
         fig.tight_layout()
         fig.savefig(f'{args.output_directory}/{args.folder}/point/{angle}.png')
-        plt.show()
+        # plt.show()
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

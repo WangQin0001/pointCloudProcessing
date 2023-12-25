@@ -82,7 +82,7 @@ def match_image(args):
         panorama = cv2.resize(panorama,(width,384),cv2.INTER_AREA)
         
         cv2.imwrite(args.output_directory+'/'+args.folder+".png",panorama)
-        cv2.imshow("img",panorama)
+        # cv2.imshow("img",panorama)
         cv2.waitKey(0)
     else:
         print("False")

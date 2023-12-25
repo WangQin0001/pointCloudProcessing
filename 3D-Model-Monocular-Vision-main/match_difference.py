@@ -374,7 +374,7 @@ def match_diff(args):
         ax.plot(np.arange(0,len(d),1),depths_new[index-1][:,-1],'blue',label='new depth*')
         # plt.plot(np.arange(0,len(d),1),(depths[index][:,0]+depths[index-1][:,-1])/2,'black')
         ax.legend(loc='lower left')
-        plt.show()
+        # plt.show()
         # break
 
 

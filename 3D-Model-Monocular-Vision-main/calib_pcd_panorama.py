@@ -1,3 +1,6 @@
+import os
+import subprocess
+
 import cv2
 import numpy as np
 import math
@@ -63,6 +66,7 @@ def calib_pcd(args):
         pcd_all+=pcd
 
     o3d.io.write_point_cloud(output_directory+'/{0}-{1}.pcd'.format(args.folder,args.shift), pcd_all)
+    return os.path.abspath(output_directory)# 返回这个目录路径
     # o3d.visualization.draw_geometries([pcd_all],window_name="PointCloud")
 
 if __name__ == '__main__':
@@ -72,6 +76,15 @@ if __name__ == '__main__':
     parser.add_argument('-df','--depth_folder', help="folder of depth", default="calib_param")
     parser.add_argument('-s','--shift', help="shift of input images", default="170")
     parser.add_argument('-d','--divide', help="divide coefficent of input images", default="6")
-    
+
     args = parser.parse_args()
-    calib_pcd(args) 
+    output_directory = calib_pcd(args)  # 接收返回的目录路径
+
+    # 生成的文件的完整路径
+    output_file_path = os.path.join(output_directory, f'{args.folder}-{args.shift}.pcd')
+    # 确保文件存在
+    if os.path.exists(output_file_path):
+        # 正确的命令应该是 explorer.exe /select,"完整路径"
+        subprocess.run(f'explorer /select,"{output_file_path}"', shell=True)
+    else:
+        print(f'File not found: {output_file_path}')
