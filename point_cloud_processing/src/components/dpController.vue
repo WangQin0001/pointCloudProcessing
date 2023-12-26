@@ -8,6 +8,17 @@
     <br>
     <br>
     <el-link type="primary" :disabled="disabled2" @click="startDenoise">{{ message2 }}</el-link>
+    <br>
+    <br>
+    <el-upload
+        ref="upload"
+        action="#"
+        :auto-upload="false"
+        :show-file-list="false"
+        :on-change="handleFileChange"
+    >
+      <el-button size="small" type="primary">选择点云文件</el-button>
+    </el-upload>
   </div>
 </template>
 
@@ -27,6 +38,10 @@ export default {
     }
   },
   methods: {
+    handleFileChange(file) {
+      this.$emit('file-selected', file.raw); // 发射事件
+      return false; // 这将阻止 el-upload 组件尝试上传文件
+    },
     startDp() {
       if (this.disabled1) return; // 如果按钮被禁用，则不执行任何操作
       this.disabled1 = true; // 禁用按钮

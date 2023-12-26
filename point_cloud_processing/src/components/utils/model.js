@@ -4,17 +4,20 @@ import { PCDLoader } from "three/examples/jsm/loaders/PCDLoader.js";
 import vertexShader from './shaders/vertexShader.glsl';
 import fragmentShader from './shaders/fragmentShader.glsl';
 
-function loadModel(callback) {
+const DEFAULT_PCD_PATH = "static/models/pcd/newOutput.pcd";
+function loadModel(file,callback) {
   const loader = new PCDLoader();
   const model = new THREE.Group();
-
+  const url = (typeof file === "string") ? file : URL.createObjectURL(file);
+  console.log("Loading model from URL: ", url); // 添加调试信息
   const pointCloudMaterial = new THREE.ShaderMaterial({
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
     transparent: true
   });
 
-  loader.load("static/models/pcd/newOutput.pcd", function (loadedPointCloud) {
+  loader.load(url, function (loadedPointCloud) {
+    console.log("PointCloud loaded: ", loadedPointCloud);
     const geometry = loadedPointCloud.geometry;
     const customSize = new Float32Array(geometry.attributes.position.count);
     const customColor = new Float32Array(geometry.attributes.color.array);
@@ -29,7 +32,10 @@ function loadModel(callback) {
     const pointCloud = new THREE.Points(geometry, pointCloudMaterial);
     model.add(pointCloud);
     callback(model);
+    if (typeof file !== "string") {
+      URL.revokeObjectURL(url);
+    }
   });
 }
 
-export default loadModel;
+export { loadModel, DEFAULT_PCD_PATH };

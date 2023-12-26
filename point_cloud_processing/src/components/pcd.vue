@@ -3,7 +3,7 @@
     <top ref="top" class="top"></top>
     <div id="webgl" class="canvas" ref="div"></div>
     <piController class="piController"></piController>
-    <dpController class="dpController"></dpController>
+    <dpController class="dpController" @file-selected="loadModelFromFile"></dpController>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ import piController from "@/components/piController.vue";
 import dpController from "@/components/dpController.vue";
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
-import loadModel  from './utils/model.js'; // import pcd model
+import {loadModel,DEFAULT_PCD_PATH} from './utils/model.js'; // import pcd model
 import {throttle} from 'lodash';
 import { mapMutations,mapState } from 'vuex';
 
@@ -84,16 +84,37 @@ export default {
       this.initRenderer();
       this.initControls();
       this.initEventListeners();
+      this.loadDefaultModel(); // 在场景初始化时加载默认模型
+    },
 
-      // 使用 loadModel 函数加载模型
-      loadModel((loadedModel) => {
-        this.model = loadedModel; // 将加载的模型存储在组件的数据属性中
-        this.scene.add(this.model); // 添加模型到场景
+    loadDefaultModel() {
+      loadModel(DEFAULT_PCD_PATH, (loadedModel) => {
+        this.model = loadedModel;
+        console.log("pcd中的model")
+        console.log(this.model)
+        this.scene.add(this.model);
         this.$refs.div.appendChild(this.renderer.domElement);
         this.animate(); // 开始渲染循环
       });
     },
 
+    //重新加载模型
+    loadModelFromFile(file) {
+      console.log("File selected for loading: ", file);
+      if (this.model) {
+        // 移除旧模型
+        // 在尝试释放资源之前，检查对象是否存在
+        if (this.model.geometry) this.model.geometry.dispose();
+        if (this.model.material) this.model.material.dispose();
+        this.scene.remove(this.model); // 移除模型
+      }
+      // 加载新模型
+      loadModel(file, (loadedModel) => {
+        this.model = loadedModel;
+        this.scene.add(loadedModel);
+        this.render(); // 调用渲染函数
+      });
+    },
     // 清除点云数据的代码
     clearPointCloud() {
       if (this.scene) {
@@ -122,11 +143,9 @@ export default {
 
     initScene() {
       this.scene = new THREE.Scene();
-
       const axesHelper = new THREE.AxesHelper(4);
       // axesHelper.position.set(-109, 36, -85);
       axesHelper.position.set(0,0,0);
-
       this.scene.add(axesHelper);
     },
     initCamera() {
@@ -163,25 +182,20 @@ export default {
     onMouseUp(event) {
       event.stopPropagation();
       event.preventDefault();
-
       this.highlightPointUnderMouse(event, true);
     },
     highlightPointUnderMouse(event,isMouseDown = false) {
       // if (event.buttons !== 1) return; // 鼠标未按下左键，不执行任何操作
       // if (event.type !== 'click') return; // 不是单次点击事件，不执行任何操作
       this.raycaster.params.Points.threshold = THRESHOLD;
-
-
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.model.children);
       if (intersects.length > 0) {
         const index = intersects[0].index;
         const pointModel = this.model.children[0];
-
         if (this.previousIndex !== null) {
           this.updatePreviousPoint(pointModel, this.previousIndex, this.previousColor);
         }
-
         this.highlightPoint(pointModel, index);
         pointModel.geometry.attributes.customSize.needsUpdate = true;
         pointModel.geometry.attributes.customColor.needsUpdate = true;
@@ -242,8 +256,6 @@ export default {
       }
     },
   },
-
-
 };
 </script>
 
