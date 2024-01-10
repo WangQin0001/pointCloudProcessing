@@ -3,7 +3,10 @@
     <top ref="top" class="top"></top>
     <div id="webgl" class="canvas" ref="div"></div>
     <piController class="piController"></piController>
-    <dpController class="dpController" @file-selected="loadModelFromFile"></dpController>
+    <dpController class="dpController"></dpController>
+    <denoiseController class="denoiseController"></denoiseController>
+    <br>
+    <renderNewPCDModel class="dpController" @file-selected="loadModelFromFile"></renderNewPCDModel>
   </div>
 </template>
 
@@ -11,11 +14,14 @@
 import top from '../views/Top.vue';
 import piController from "@/components/piController.vue";
 import dpController from "@/components/dpController.vue";
+import denoiseController from "@/components/denoiseController.vue";
+import renderNewPCDModel from "@/components/renderNewPCDModel.vue";
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {loadModel,DEFAULT_PCD_PATH} from './utils/model.js'; // import pcd model
 import {throttle} from 'lodash';
 import { mapMutations,mapState } from 'vuex';
+import RenderNewPCDModel from "@/components/renderNewPCDModel.vue";
 
 // const CAMERA_POSITION = new THREE.Vector3(340, 410, 550);
 const CAMERA_POSITION = new THREE.Vector3(10, 10, 10);
@@ -28,9 +34,12 @@ const THRESHOLD = 0.01//精度
 
 export default {
   components: {
+    RenderNewPCDModel,
     top,
     piController,
-    dpController
+    dpController,
+    denoiseController,
+    renderNewPCDModel
   },
   data() {
     return {
@@ -273,8 +282,8 @@ export default {
 
 .piController {
   position: absolute;
-  top: 120px;
-  right: 20px;
+  top: 100px;
+  right: 10px;
 }
 
 

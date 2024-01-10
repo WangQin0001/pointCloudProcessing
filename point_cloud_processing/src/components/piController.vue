@@ -1,56 +1,52 @@
 <template xmlns="http://www.w3.org/1999/html">
-  <div>
-    <div>
-      <el-link type="primary" @click="offsetPosition">Goto offset position</el-link>
-      <br>
-      <br>
-
-      <el-link type="primary" @click='captureCurrentImage'>Capture images in current position</el-link>
-      <br>
-      <br>
-
-      <div class="input-container">
-        <el-input
-            placeholder="step"
-            v-model="three.step"
-            clearable
-            class="input-item">
-        </el-input>
-        <el-input
-            placeholder="dir"
-            v-model="three.dir"
-            clearable
-            class="input-item">
-        </el-input>
-        <el-input
-            placeholder="angle"
-            v-model="three.angle"
-            clearable
-            class="input-item">
-        </el-input>
-      </div>
-
-      <el-link type="primary" @click="captureSurroundingImage">Capture images of the surrounding scenes</el-link>
-      <br>
-      <br>
-      <div class="input-container">
-        <el-input
-            placeholder="dir"
-            v-model="four.dir"
-            clearable
-            class="input-item">
-        </el-input>
-        <el-input
-            placeholder="angle"
-            v-model="four.angle"
-            clearable
-            class="input-item">
-        </el-input>
-      </div>
-      <el-link type="primary" @click="manualRotate">Manual rotate</el-link>
-      <br>
-      <el-link type="primary"></el-link>
+  <div class="container">
+    <el-link type="primary" @click="offsetPosition">Goto offset position</el-link>
+    <br>
+    <br>
+    <el-link type="primary" @click='captureCurrentImage'>Capture images in current position</el-link>
+    <br>
+    <br>
+    <div class="input-container">
+      <el-input
+          placeholder="step"
+          v-model="three.step"
+          clearable
+          class="input-item">
+      </el-input>
+      <el-input
+          placeholder="dir"
+          v-model="three.dir"
+          clearable
+          class="input-item">
+      </el-input>
+      <el-input
+          placeholder="angle"
+          v-model="three.angle"
+          clearable
+          class="input-item">
+      </el-input>
     </div>
+
+    <el-link type="primary" @click="captureSurroundingImage">Capture images of the surrounding scenes</el-link>
+    <br>
+    <br>
+    <div class="input-container">
+      <el-input
+          placeholder="dir"
+          v-model="four.dir"
+          clearable
+          class="input-item">
+      </el-input>
+      <el-input
+          placeholder="angle"
+          v-model="four.angle"
+          clearable
+          class="input-item">
+      </el-input>
+    </div>
+    <el-link type="primary" @click="manualRotate">Manual rotate</el-link>
+    <br>
+    <el-link type="primary"></el-link>
   </div>
 </template>
 
@@ -119,6 +115,9 @@ export default {
 
 
 <style scoped>
+.container{
+  max-width: 400px;
+}
 
 .input-container {
   display: flex;

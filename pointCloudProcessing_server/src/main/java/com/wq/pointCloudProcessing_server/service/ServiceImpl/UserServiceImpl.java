@@ -6,11 +6,6 @@ import com.wq.pointCloudProcessing_server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-/**
- * @author 大白菜
- * @date Created in 2022/9/27 9:31
- */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired//注解，自动注入mapper中实例化的对象，没有这个注解userMapper为空

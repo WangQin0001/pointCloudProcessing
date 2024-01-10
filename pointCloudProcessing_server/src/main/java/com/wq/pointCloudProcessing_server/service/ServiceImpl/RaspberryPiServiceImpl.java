@@ -4,7 +4,6 @@ import com.wq.pointCloudProcessing_server.dto.RaspberryPiDto;
 import com.wq.pointCloudProcessing_server.service.RaspberryPiService;
 import com.wq.pointCloudProcessing_server.util.Result;
 import com.wq.pointCloudProcessing_server.util.ResultUtil;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
