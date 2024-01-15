@@ -1,7 +1,6 @@
 *.log
 node_modules/
 server_files/
-input/
 output/
 FilesToBeDenoised/
 UNZIPFilesToDp/
