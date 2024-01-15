@@ -33,7 +33,7 @@ Firstly use SIFT algorithm to determine the coordinates of the pixels measured b
 ```bash
 python search_point_in_panorama.py -f folder_name
 ```
-These coordinates will be saved in csv file `distance.csv` in the folder `27072023-1628` in the output directory.
+These coordinates will be saved in csv file `distance.csv` in the folder `00000000-1628` in the output directory.
 Then find the dependent function as the first polynomial.
 ```bash
 python solve_param_each_part.py -f folder_name -s shift_value -d divide_coefficent

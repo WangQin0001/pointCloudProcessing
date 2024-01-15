@@ -75,7 +75,7 @@ def solve_paras(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-io','--inout_directory', help="directory to images", default="output")
-    parser.add_argument('-f','--folder', help="folder of input images", default="27072023-1628")
+    parser.add_argument('-f','--folder', help="folder of input images", default="00000000-1628")
     
     args = parser.parse_args()
     solve_paras(args)

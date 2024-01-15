@@ -120,7 +120,7 @@ def search_point(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i','--input_directory', help="directory to input images", default="input")
-    parser.add_argument('-f','--folder', help="folder of input images", default="27072023-1628")
+    parser.add_argument('-f','--folder', help="folder of input images", default="00000000-1628")
     parser.add_argument('-o','--output_directory', help="directory to input images", default="output")
     args = parser.parse_args()
     search_point(args) 

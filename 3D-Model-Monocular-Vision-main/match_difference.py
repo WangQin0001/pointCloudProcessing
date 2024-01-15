@@ -388,7 +388,7 @@ def match_diff(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-io','--inout_directory', help="directory to images", default="output")
-    parser.add_argument('-f','--folder', help="folder of input images", default="27072023-1628")
+    parser.add_argument('-f','--folder', help="folder of input images", default="00000000-1628")
     parser.add_argument('-df','--depth_folder', help="folder of depth", default="calib_param")
     parser.add_argument('-s','--shift', help="shift of input images", default="170")    
     parser.add_argument('-d','--divide', help="divide coefficent of input images", default="6")

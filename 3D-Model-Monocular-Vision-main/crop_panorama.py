@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-folder = '27072023-1628'
+folder = '00000000-1628'
 width = int(3280/2464*384/62.2*360)
 panorama = cv2.imread("output/panorama/"+folder+"-panorama.png")
 print(panorama.shape)

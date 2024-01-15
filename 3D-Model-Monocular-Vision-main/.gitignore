@@ -149,7 +149,7 @@ dmypy.json
 
 train_test_inputs/
 input/
-!input/27072023-1628/
+!input/00000000-1628/
 READMEOLD.md
 calib_disparity.py
 calib_pcd.py

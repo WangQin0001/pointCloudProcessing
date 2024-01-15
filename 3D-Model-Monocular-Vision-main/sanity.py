@@ -72,7 +72,7 @@ def sanity(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-m','--model_midas', help="midas model", default="DPT_BEiT_L_384")
-    parser.add_argument('-i','--input_directory', help="directory to input images", default="input/27072023-1628/*/l.jpg")
+    parser.add_argument('-i','--input_directory', help="directory to input images", default="input/00000000-1628/*/l.jpg")
     parser.add_argument('-o','--output_directory', help="directory to save output", default="output")
 
     args = parser.parse_args()

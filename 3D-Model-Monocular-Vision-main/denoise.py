@@ -71,7 +71,7 @@ if __name__ == "__main__":
         process_point_cloud(file_path, output_directory)
     else:
         # 使用默认输入路径
-        point_cloud_dir = os.path.join(base_path, 'output', '27072023-1628', '170', 'point-cloud')
+        point_cloud_dir = os.path.join(base_path, 'output', '00000000-1628', '170', 'point-cloud')
         for file_name in os.listdir(point_cloud_dir):
             if file_name.endswith('-1628-170.pcd'):
                 file_path = os.path.join(point_cloud_dir, file_name)

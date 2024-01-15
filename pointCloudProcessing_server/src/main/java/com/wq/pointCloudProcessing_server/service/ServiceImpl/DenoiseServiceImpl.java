@@ -23,8 +23,8 @@ import javax.annotation.PostConstruct;
 @Service
 public class DenoiseServiceImpl implements DenoiseService {
 
-    private final Path rootLocation = Paths.get("F:\\OneDrive\\100_work\\repo\\point_cloud_processing\\server_files\\FilesToBeDenoised");
-    private static final String SCRIPT_ROOT = "F:\\OneDrive\\100_work\\repo\\point_cloud_processing\\3D-Model-Monocular-Vision-main";
+    private final Path rootLocation = Paths.get("F:\\repo\\point_cloud_processing\\server_files\\FilesToBeDenoised");
+    private static final String SCRIPT_ROOT = "F:\\repo\\point_cloud_processing\\3D-Model-Monocular-Vision-main";
     private static final String PYTHON_EXECUTABLE = "D:\\dev\\anaconda\\envs\\point_cloud_processing\\python.exe";
 
     @PostConstruct

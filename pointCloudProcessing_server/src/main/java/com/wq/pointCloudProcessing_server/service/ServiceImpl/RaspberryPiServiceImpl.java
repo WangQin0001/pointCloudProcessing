@@ -18,7 +18,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
     public Result controlRaspberryPi(RaspberryPiDto raspberryPiDto){
         try {
 
-            String scriptPath = "F:\\OneDrive\\100_work\\repo\\point_cloud_processing\\raspberryPi\\main.py";
+            String scriptPath = "F:\\repo\\point_cloud_processing\\raspberryPi\\main.py";
 //            String scriptPath = "F:\\OneDrive\\100_work\\repo\\point_cloud_processing\\pythonProjectTest\\main.py";
 
             // 这里用的是Windows系统的Python路径，注意根据您的实际安装路径进行修改

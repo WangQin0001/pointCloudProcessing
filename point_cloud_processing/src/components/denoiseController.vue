@@ -7,6 +7,7 @@
         action="http://localhost:8080/api/denoise/upload"
         multiple
         :limit="3"
+        :on-exceed="handleExceed"
         :before-upload="beforeFileUpload"
         :on-success="handleUploadSuccess">
       <el-button size="small" type="primary">Click to upload the file for denoising</el-button>
@@ -35,6 +36,9 @@ export default {
         return false;
       }
       return true;
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`You can only upload up to 3 files.`);
     },
     handleUploadSuccess(response, file, fileList) {
       this.$message.success('Upload PCD file successful!');

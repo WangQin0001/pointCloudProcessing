@@ -4,8 +4,7 @@ import glob
 import argparse
 
 # Declare the default directories as constants at the top of the file
-DEFAULT_INPUT_DIRECTORY = "F:/OneDrive/100_work/repo/point_cloud_processing/raspberryPi/input"
-
+DEFAULT_INPUT_DIRECTORY = "F:/repo/point_cloud_processing/raspberryPi/input"
 def calculate_dark(image):
     for j in range(0,image.shape[1]):
         check = False
@@ -94,7 +93,7 @@ if __name__ == '__main__':
     print("testtesttest")
     parser = argparse.ArgumentParser()
     parser.add_argument('-i','--input_directory', help="directory to input images", default=DEFAULT_INPUT_DIRECTORY)
-    parser.add_argument('-f','--folder', help="folder of input images", default="09112023-1509")
+    parser.add_argument('-f','--folder', help="folder of input images", default="00000000-1628")
     parser.add_argument('-o','--output_directory', help="directory to input images", default="output/panorama")
 
     args = parser.parse_args()

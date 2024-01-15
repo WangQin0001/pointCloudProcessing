@@ -4,9 +4,11 @@
     <el-upload
         class="upload-demo"
         action="http://localhost:8080/api/dp/uploadAndStart"
-    :on-change="handleZipFileSelection"
-    :before-upload="beforeZipUpload"
-    accept=".zip">
+        :on-change="handleZipFileSelection"
+        :before-upload="beforeZipUpload"
+        :show-file-list="false"
+        :on-success="handleZipFileUploadSuccess"
+        accept=".zip">
     <el-button slot="trigger" size="small" type="primary">choose zip file to upload</el-button>
     <div slot="tip" class="el-upload__tip">only can upload ZIP file</div>
     </el-upload>
@@ -33,13 +35,17 @@ export default {
   },
   methods: {
     // 处理 ZIP 文件的选择
-    handleZipFileSelection(file, fileList) {
+    handleZipFileSelection(file) {
       this.zipFile = file.raw;
     },
     // 在上传之前的钩子函数
     beforeZipUpload(file) {
       // 可以在这里添加上传前的检查逻辑，比如文件大小限制等
       return file.name.slice(-4) === '.zip';
+    },
+    handleZipFileUploadSuccess(response, file, fileList){
+      console.log('Upload Success:', response, file, fileList);
+      this.$message.success('file '+file.name+' upload success, under processing!');
     },
 
     startDp(folderPath = null) {
