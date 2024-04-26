@@ -82,6 +82,13 @@
             <version>1.5</version>
         </dependency>
 
+        <!--ssh控制树莓派-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
     </dependencies>
 
     <build>

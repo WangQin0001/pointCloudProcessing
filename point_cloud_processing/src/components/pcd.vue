@@ -7,6 +7,8 @@
     <denoiseController class="denoiseController"></denoiseController>
     <br>
     <renderNewPCDModel class="dpController" @file-selected="loadModelFromFile"></renderNewPCDModel>
+    <auto-controller class="autoController"></auto-controller>
+    <temp-monitor class="tempMonitor"></temp-monitor>
   </div>
 </template>
 
@@ -16,12 +18,16 @@ import piController from "@/components/piController.vue";
 import dpController from "@/components/dpController.vue";
 import denoiseController from "@/components/denoiseController.vue";
 import renderNewPCDModel from "@/components/renderNewPCDModel.vue";
+import autoController from "@/components/autoController.vue";
+import tempMonitor from "@/components/tempMonitor.vue";
+
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {loadModel,DEFAULT_PCD_PATH} from './utils/model.js'; // import pcd model
 import {throttle} from 'lodash';
 import { mapMutations,mapState } from 'vuex';
-import RenderNewPCDModel from "@/components/renderNewPCDModel.vue";
+
+
 
 // const CAMERA_POSITION = new THREE.Vector3(340, 410, 550);
 const CAMERA_POSITION = new THREE.Vector3(10, 10, 10);
@@ -34,7 +40,8 @@ const THRESHOLD = 0.01//精度
 
 export default {
   components: {
-    RenderNewPCDModel,
+    autoController,
+    tempMonitor,
     top,
     piController,
     dpController,
@@ -282,9 +289,21 @@ export default {
 
 .piController {
   position: absolute;
-  top: 100px;
+  top: 130px;
   right: 10px;
 }
 
-
+.autoController{
+  position: absolute; /* 固定位置 */
+  top: 80px; /* 距离视口顶部0 */
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center; /* 确保文本也居中 */
+}
+.tempMonitor{
+  position: absolute;
+  top: 60px;
+  right: 160px;
+}
 </style>

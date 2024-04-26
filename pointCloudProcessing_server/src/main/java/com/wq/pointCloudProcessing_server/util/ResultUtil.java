@@ -1,7 +1,7 @@
 package com.wq.pointCloudProcessing_server.util;
 
 /**
- * @author 大白菜
+ * @author wangqin
  * @date Created in 2022/9/27 9:34
  */
 public class ResultUtil {
@@ -25,7 +25,7 @@ public class ResultUtil {
     }
 
     /**
-     * 失败
+     * 失败 自定义错误信息
      **/
     public static Result error(Object object) {
         Result result = new Result();

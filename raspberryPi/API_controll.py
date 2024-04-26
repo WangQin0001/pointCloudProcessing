@@ -1,9 +1,18 @@
+import logging
 import paramiko
 import math
 from datetime import datetime
 import zipfile
 import os
-import json
+from pathlib import Path
+
+BASE_DIR = Path("F:/repo/point_cloud_processing/3D-Model-Monocular-Vision-main")
+LOG_FILE = BASE_DIR.parent / "raspberryPi" / "app.log"
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 
 class SSH_local:
@@ -21,27 +30,37 @@ class SSH_local:
         self.ssh.connect(self.host, username=self.username, password=self.password)
 
     def compile(self, file_cpp_name, library):
-        command = 'cd ' + self.path + ';' + 'g++ -o ' + self.file_exe + " " + file_cpp_name + " " + library
+        command = (
+            "cd "
+            + self.path
+            + ";"
+            + "g++ -o "
+            + self.file_exe
+            + " "
+            + file_cpp_name
+            + " "
+            + library
+        )
         self.ssh.exec_command(command)
         # print(stdout.read().decode())
 
     def read_angle(self):
-        stdin, stdout, stderr = self.ssh.exec_command(self.path_run + '0 0 0 0')
+        stdin, stdout, stderr = self.ssh.exec_command(self.path_run + "0 0 0 0")
         out = stdout.read().decode()
         i = -2
-        while (out[i] != ' '):
+        while out[i] != " ":
             i -= 1
         try:
-            offset = int(out[i + 1:-1])
+            offset = int(out[i + 1 : -1])
         except:
             print("Error: ", out)
-        print("Offset angle in api_controll: "+str(offset))
+        print("Offset angle in api_controll: " + str(offset))
         return offset
 
     def go_to_offset_angle(self, offset):
-        print("go_to_offset_angle in api controll: "+str(offset))
+        print("go_to_offset_angle in api controll: " + str(offset))
         loop = 1
-        while (loop):
+        while loop:
             angle = self.read_angle()
             print("Angle now: " + str(angle / 1024 * 360))
             dir = 0
@@ -58,7 +77,7 @@ class SSH_local:
                 else:
                     loop = round((1024 - offset + angle) / 32)
             if loop:
-                command = '5 ' + str(dir) + ' 0 ' + str(loop)
+                command = "5 " + str(dir) + " 0 " + str(loop)
                 print("Waiting ...")
                 stdin, stdout, stderr = self.ssh.exec_command(self.path_run + command)
                 print(stdout.read().decode())
@@ -92,7 +111,7 @@ class SSH_local:
         return round(angle / (180 / math.pow(2, step - 1)))
 
     def control_led(self, led_number, status):
-        self.ssh.exec_command(self.path_run + '0 0 0 ' + str(-led_number * 2 + status))
+        self.ssh.exec_command(self.path_run + "0 0 0 " + str(-led_number * 2 + status))
 
     def capture_image_full(self, step, dir, angle, localpath):
         loop = self.get_loop_from_angle(angle, step)
@@ -101,27 +120,38 @@ class SSH_local:
 
         file_name = datetime.now().strftime("%d%m%Y-%H%M")
         print("Folder save Images: ", file_name)
-
+        logging.info(f"Folder save Images: {file_name}")
         # turn on led 3 - not in the offset position
         self.control_led(3, 1)
 
         print("loop: " + str(loop + 1))
-        command = str(step) + ' ' + str(dir) + ' 1 ' + str(loop) + ' ' + file_name
+        command = str(step) + " " + str(dir) + " 1 " + str(loop) + " " + file_name
         print("Capturing {} images...".format(loop * 2 + 2))
+        logging.info(f"Capturing {format(loop*2+2)} images")
         stdin, stdout, stderr = self.ssh.exec_command(self.path_run + command)
         data = stdout.read() + stderr.read()
         print(data.decode())
         print("Captured {} images!\n".format(loop * 2 + 2))
-
+        logging.info(f"Captured {format(loop*2+2)} images")
         print("Zipping images ...")
-        stdin, stdout, stderr = self.ssh.exec_command("cd /media/DCIM;zip -r " + file_name + ".zip " + file_name)
+        logging.info("Zipping images ...")
+        stdin, stdout, stderr = self.ssh.exec_command(
+            "cd /media/DCIM;zip -r " + file_name + ".zip " + file_name
+        )
         print(stdout.read().decode())
         print("File's zipped\n")
-
+        logging.info("File's zipped")
         print("Copying zip file to the local ...")
+        logging.info("Copying zip file to the local")
         ftp_client = self.ssh.open_sftp()
-        ftp_client.get('/media/DCIM/' + file_name + '.zip', localpath + file_name + '.zip')
-        print("File {} has been copied to the computer in the folder {}".format(file_name + '.zip', localpath))
+        ftp_client.get(
+            "/media/DCIM/" + file_name + ".zip", localpath + file_name + ".zip"
+        )
+        print(
+            "File {} has been copied to the computer in the folder {}".format(
+                file_name + ".zip", localpath
+            )
+        )
 
         # ssh.exec_command(path+'0 0 0 -3')
         # remove folder and file in stereoPi
@@ -132,6 +162,7 @@ class SSH_local:
         with zipfile.ZipFile(localpath + file_name + ".zip", "r") as zip_ref:
             zip_ref.extractall(localpath)
         print("Done!")
+        return file_name
 
     def capture_single_image(self, localpath):
         file_name = datetime.now().strftime("%d%m%Y-%H%M")
@@ -139,7 +170,7 @@ class SSH_local:
 
         # turn on led 3 - not in the offset position
         self.control_led(3, 1)
-        command = '0 0 1 0 ' + file_name
+        command = "0 0 1 0 " + file_name
         print("Capturing 2 images...")
         stdin, stdout, stderr = self.ssh.exec_command(self.path_run + command)
         data = stdout.read() + stderr.read()
@@ -147,14 +178,22 @@ class SSH_local:
         print("Captured 2 images!\n")
 
         print("Zipping images ...")
-        stdin, stdout, stderr = self.ssh.exec_command("cd /media/DCIM;zip -r " + file_name + ".zip " + file_name)
+        stdin, stdout, stderr = self.ssh.exec_command(
+            "cd /media/DCIM;zip -r " + file_name + ".zip " + file_name
+        )
         print(stdout.read().decode())
         print("File's zipped\n")
 
         print("Copying zip file to the local ...")
         ftp_client = self.ssh.open_sftp()
-        ftp_client.get('/media/DCIM/' + file_name + '.zip', localpath + file_name + '.zip')
-        print("File {} has been copied to the computer in the folder {}".format(file_name + '.zip', localpath))
+        ftp_client.get(
+            "/media/DCIM/" + file_name + ".zip", localpath + file_name + ".zip"
+        )
+        print(
+            "File {} has been copied to the computer in the folder {}".format(
+                file_name + ".zip", localpath
+            )
+        )
 
         # ssh.exec_command(path+'0 0 0 -3')
         # remove folder and file in stereoPi
@@ -167,13 +206,12 @@ class SSH_local:
         os.remove(localpath + file_name + ".zip")
         print("Done!")
 
-    def rotate_platform(self,angle, dir):
+    def rotate_platform(self, angle, dir):
         # step = self.choose_step()
         # angle = self.choose_angle()
         loop = self.get_loop_from_angle(angle, 5)
         # dir = self.choose_direction()
-        command = '5 ' + str(dir) + ' 0 ' + str(loop)
+        command = "5 " + str(dir) + " 0 " + str(loop)
         print("Waiting " + str(loop) + " rotating steps...")
         self.ssh.exec_command(self.path_run + command)
         print("Done rotating!")
-

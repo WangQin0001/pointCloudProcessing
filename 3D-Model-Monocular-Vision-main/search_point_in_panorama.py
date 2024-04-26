@@ -5,6 +5,7 @@ import glob
 import math
 from pathlib import Path
 import argparse
+DEFAULT_INPUT_DIRECTORY = "F:/repo/point_cloud_processing/raspberryPi/input"
 
 def search_point(args):
     # images_path = sorted(glob.glob(input_path+folder+"/*/l.jpg", recursive=True))
@@ -119,7 +120,9 @@ def search_point(args):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i','--input_directory', help="directory to input images", default="input")
+    parser.add_argument('-i','--input_directory', help="directory to input images", default=DEFAULT_INPUT_DIRECTORY)
+    # parser.add_argument('-i','--input_directory', help="directory to input images", default="input")
+
     parser.add_argument('-f','--folder', help="folder of input images", default="00000000-1628")
     parser.add_argument('-o','--output_directory', help="directory to input images", default="output")
     args = parser.parse_args()

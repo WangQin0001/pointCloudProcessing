@@ -45,3 +45,25 @@ export function manualRotate(methodName,step,dir,angle) {
         }
     })
 }
+
+export function auto() {
+    return request({
+        url: '/autoStart',
+        method: 'get',
+    })
+}
+
+export function tempMonitor() {
+    return request({
+        url: '/tempMonitor',
+        method: 'get',
+    })
+}
+
+// Function to fetch the current progress
+export function fetchProgress() {
+    return request({
+        url:'/progress',
+        method:'get'
+    })
+}

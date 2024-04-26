@@ -60,7 +60,6 @@ def main(operation, step=None, dir=None, angle=None):
             "stereoPi_new.cpp source/lidarlite_v3.cpp source/GPIO.cpp source/UART.cpp",
             "-I .",
         )
-
         if operation == "0":
             pass
         elif operation == "1":
@@ -84,6 +83,7 @@ def main(operation, step=None, dir=None, angle=None):
                 print("Error: Missing arguments for operation 4")
                 return
             SSH.rotate_platform(angle, dir)
+
         else:
             print("Invalid operation")
 
